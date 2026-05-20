@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="<img width="400" height="434" alt="Corn-trol 로고" src="https://github.com/user-attachments/assets/13ca5cc1-7ac6-4430-9b35-d916a77fb2a9" />
+<img src="width="400" height="434" alt="Corn-trol 로고" src="https://github.com/user-attachments/assets/13ca5cc1-7ac6-4430-9b35-d916a77fb2a9" />
 " width="180"/>
 
 ### AI 기반 사고 흐름 연결 및 집중 사고 지원 서비스
