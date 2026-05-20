@@ -2,20 +2,24 @@ package com.corntrol.corntrol.domain.record.repository;
 
 import com.corntrol.corntrol.domain.record.entity.Record;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-    // 현재 기록과 연결된 모든 타겟 기록들을 가져오는 쿼리
+    Optional<Record> findByIdAndUser_Id(Long id, Long userId);
+
     @Query("SELECT r FROM Record r " +
             "JOIN RecordLink rl ON r.id = rl.targetRecordId " +
-            "WHERE rl.sourceRecordId = :recordId AND rl.isConnected = true")
-    List<Record> findAllConnectedRecords(@Param("recordId") Long recordId);
+            "WHERE rl.sourceRecordId = :recordId " +
+            "AND rl.isConnected = true " +
+            "AND r.user.id = :userId")
+    List<Record> findAllConnectedRecords(@Param("recordId") Long recordId, @Param("userId") Long userId);
 
     Page<Record> findAllByUser_Id(Long userId, Pageable pageable);
 
@@ -23,7 +27,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "(r.content LIKE %:keyword% OR r.mainTopic LIKE %:keyword% OR r.keywords LIKE %:keyword%)")
     Page<Record> searchRecords(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
 
-    // 유저 ID로 관련된 모든 기록 삭제
     void deleteAllByUserId(Long userId);
 
     List<Record> findByUser_Id(Long userId);

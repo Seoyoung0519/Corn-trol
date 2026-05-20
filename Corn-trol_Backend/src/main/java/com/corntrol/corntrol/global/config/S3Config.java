@@ -20,9 +20,6 @@ public class S3Config {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    /**
-     * AWS S3 서비스와 통신하기 위한 S3Client 인스턴스를 빈으로 등록합니다.
-     */
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);

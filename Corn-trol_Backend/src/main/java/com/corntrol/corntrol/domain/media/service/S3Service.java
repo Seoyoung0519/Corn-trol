@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -20,9 +21,6 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    /**
-     * 파일을 S3에 업로드하고 해당 파일의 퍼블릭 접근 URL을 반환
-     */
     public String uploadFile(MultipartFile file) {
         String fileName = createFileName(file.getOriginalFilename());
 
@@ -39,6 +37,21 @@ public class S3Service {
             return getPublicUrl(fileName);
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 오류가 발생했습니다.", e);
+        }
+    }
+
+    public void deleteFile(String fileUrl) {
+        try {
+            String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch (Exception e) {
+            throw new RuntimeException("S3 파일 삭제 중 오류가 발생했습니다.", e);
         }
     }
 

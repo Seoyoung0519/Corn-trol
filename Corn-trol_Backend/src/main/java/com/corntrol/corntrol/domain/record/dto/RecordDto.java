@@ -7,7 +7,6 @@ public class RecordDto {
 
     @Getter @Setter @NoArgsConstructor
     public static class CreateRequest {
-        private Long userId;
         private String type; // "TEXT" or "VOICE"
         private String content;
         private String audioUrl;

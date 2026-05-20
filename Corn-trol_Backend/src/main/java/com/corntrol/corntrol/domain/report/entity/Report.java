@@ -18,15 +18,15 @@ public class Report {
 
     private Long userId;
 
-    private Double focusTimeTotal; // 총 몰입 시간
+    private Double focusTimeTotal;
 
-    private Double shortFormTimeTotal; // 숏폼 소비 시간
-    private Double recoveryRate; // 알곡 회복률 (%)
+    private Double shortFormTimeTotal;
+    private Double recoveryRate;
 
-    private Integer connectionDensity; // 연결 밀도
+    private Integer connectionDensity;
 
     @Column(columnDefinition = "TEXT")
-    private String antiPopcornFeedback; // AI 리포트 내용
+    private String antiPopcornFeedback;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -8,10 +8,11 @@ import com.corntrol.corntrol.domain.focus.repository.CoolingQuestionRepository;
 import com.corntrol.corntrol.domain.focus.repository.FocusSessionRepository;
 import com.corntrol.corntrol.domain.record.entity.Record;
 import com.corntrol.corntrol.domain.record.repository.RecordRepository;
+import com.corntrol.corntrol.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
@@ -25,13 +26,26 @@ public class FocusService {
     private final WebClient webClient;
     private final CoolingQuestionRepository coolingQuestionRepository;
     private final FocusSessionRepository focusSessionRepository;
+    private final UserRepository userRepository;
+
+    private Long getUserIdFromEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저를 찾을 수 없습니다."))
+                .getId();
+    }
 
     @Transactional
-    public void createFocusQuestions(Long userId, Long recordId, String topic) {
+    public void createFocusQuestions(String email, Long recordId, String topic) {
+        Long userId = getUserIdFromEmail(email);
+
         Record current = recordRepository.findById(recordId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 기록을 찾을 수 없습니다."));
 
-        List<Record> connectedRecords = recordRepository.findAllConnectedRecords(recordId);
+        if (!current.getUser().getId().equals(userId)) {
+            throw new EntityNotFoundException("접근 권한이 없습니다.");
+        }
+
+        List<Record> connectedRecords = recordRepository.findAllConnectedRecords(recordId, userId);
 
         AiApiDto.Request request = AiApiDto.Request.builder()
                 .userId(userId)
@@ -77,15 +91,33 @@ public class FocusService {
                 .toList();
     }
 
-    public List<QuestionResponse> getQuestions(Long recordId) {
+    @Transactional(readOnly = true)
+    public List<QuestionResponse> getQuestions(String email, Long recordId) {
+        Long userId = getUserIdFromEmail(email);
+
+        Record record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 기록을 찾을 수 없습니다."));
+
+        if (!record.getUser().getId().equals(userId)) {
+            throw new EntityNotFoundException("접근 권한이 없습니다.");
+        }
+
         return coolingQuestionRepository.findAllByRecordId(recordId).stream()
                 .map(q -> new QuestionResponse(q.getId(), q.getQuestionText()))
                 .toList();
     }
 
-    // 집중 모드 시작 API 로직
     @Transactional
-    public Long startFocus(Long userId, Long recordId, Integer duration) {
+    public Long startFocus(String email, Long recordId, Integer duration) {
+        Long userId = getUserIdFromEmail(email);
+
+        Record record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 기록을 찾을 수 없습니다."));
+
+        if (!record.getUser().getId().equals(userId)) {
+            throw new EntityNotFoundException("접근 권한이 없습니다.");
+        }
+
         FocusSession session = FocusSession.builder()
                 .userId(userId)
                 .recordId(recordId)
@@ -97,11 +129,16 @@ public class FocusService {
         return savedSession.getId();
     }
 
-    // 집중 모드 종료 API 로직
     @Transactional
-    public void endFocus(Long sessionId) {
+    public void endFocus(String email, Long sessionId) {
+        Long userId = getUserIdFromEmail(email);
+
         FocusSession session = focusSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new EntityNotFoundException("진행 중인 집중 세션을 찾을 수 없습니다."));
+
+        if (!session.getUserId().equals(userId)) {
+            throw new EntityNotFoundException("접근 권한이 없습니다.");
+        }
 
         session.endSession();
     }

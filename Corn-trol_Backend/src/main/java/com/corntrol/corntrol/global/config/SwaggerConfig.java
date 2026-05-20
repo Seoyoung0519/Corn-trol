@@ -23,9 +23,9 @@ public class SwaggerConfig {
         Components components = new Components()
                 .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
                         .name(jwtSchemeName)
-                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                        .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
-                        .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
+                        .bearerFormat("JWT"));
 
         return new OpenAPI()
                 .info(new Info().title("Corntrol API").version("1.0.0"))

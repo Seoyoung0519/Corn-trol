@@ -29,7 +29,6 @@ public class Record {
 
     private String audioUrl;
 
-    // AI/ML 1 분석 결과 반영
     private String mainTopic;
 
     @Column(columnDefinition = "TEXT")

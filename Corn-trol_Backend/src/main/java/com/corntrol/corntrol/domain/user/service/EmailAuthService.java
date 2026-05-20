@@ -18,19 +18,15 @@ public class EmailAuthService {
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
 
-    // 메모리에 이메일별 [인증번호, 만료시간] 저장
     private final Map<String, VerificationInfo> verificationStorage = new ConcurrentHashMap<>();
 
-    // 인증이 완료된 이메일들을 잠시 보관 (회원가입 기한 10분)
     private final Map<String, LocalDateTime> completeStorage = new ConcurrentHashMap<>();
 
-    // 인증 이메일 생성 및 발송
     public void sendVerificationCode(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         }
 
-        // 6자리 랜덤 숫자 생성
         String code = String.format("%06d", new Random().nextInt(1000000));
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -67,7 +63,6 @@ public class EmailAuthService {
         completeStorage.put(email, LocalDateTime.now().plusMinutes(10));
     }
 
-    // 회원가입 직전 최종 검문 메서드
     public void checkEmailVerified(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
