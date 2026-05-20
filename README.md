@@ -1,23 +1,8 @@
-# Corn-trol
+# 🌽 Corn-trol
 
-<table>
-<tr>
-<td width="55%" valign="middle">
-
-### AI 기반 사고 흐름 연결 및 집중 사고 지원 서비스
-
-짧게 흩어진 생각들을 기록하고,  
-AI 기반 연결을 통해 하나의 사고 흐름으로 확장하는 서비스
-
-</td>
-
-<td width="45%" align="center">
-
-<img width="320" height="347" alt="Corn-trol 로고" src="https://github.com/user-attachments/assets/13ca5cc1-7ac6-4430-9b35-d916a77fb2a9" />
-
-</td>
-</tr>
-</table>
+| Corn-trol |
+|---|
+| **AI 기반 사고 흐름 연결 및 집중 사고 지원 서비스**<br><br>짧게 흩어진 생각들을 기록하고,<br>AI 기반 연결을 통해 하나의 사고 흐름으로 확장하는 서비스 |
 
 ---
 
