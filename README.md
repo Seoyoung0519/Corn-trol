@@ -102,16 +102,3 @@ AI 기반 의미 분석을 활용하여 기록들을 연결하고,
 ### 외부 LLM API 연동 (Google Gemini)
 llm_service.py에서 google-genai 클라이언트로 gemini-2.5-flash를 호출하고, API 키가 없거나 호출이 실패하면 mock 질문으로 대체하는 흐름을 만들 수 있었습니다.
 
-
----
-
-## 향후 개선 사항
-
-### iOS 실기기·시뮬레이터 테스트 환경 보강
-개발 중 iOS 환경에서는 WAV·MP3 재생·테스트가 어려워, Android Studio 에뮬레이터에서 WAV·MP3 동작을 확인했습니다. Android에서는 두 포맷 모두 정상 동작했으나, Android 에뮬레이터만으로는 iOS UX·권한·백그라운드 녹음 이슈를 검증하기 어렵습니다. 향후 TestFlight 베타, 무료 Apple ID 기반 로컬 빌드(7일 제한), 또는 팀/학교 개발자 계정 공유 등 iOS 전용 검증 경로를 마련해, 음성 입력(팝콘 수집) 기능을 iOS에서도 반복 테스트할 수 있게 할 예정입니다.
-
-### 에러 처리 및 로깅 체계화
-현재 알곡 식히기 기능에서 LLM 호출 실패 시 print로만 처리하고 있습니다. HTTP 상태 코드·에러 메시지 표준화와 구조화된 로깅(요청 ID, 실패 원인 등)을 도입해, 운영 시 원인 파악이 쉽도록 개선할 예정입니다.
-
-### API 문서 및 README 보강
-향후 엔드포인트 예시(POST /connections/recommend, POST /focus/questions), 요청/응답 샘플 JSON을 README에 추가 정리할 예정입니다.
